@@ -190,10 +190,12 @@ class Database
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
-		openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-		syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
-		syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: " . $error_trace));
-		closelog();
+		if (!defined('TRAVIS_CI') || TRAVIS_CI == 0) {
+			openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
+			syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: " . $error_trace));
+			closelog();
+		}
 
 		/**
 		 * log error for reporting
