@@ -1,13 +1,13 @@
 <?php
-use PHPUnit\Framework\TestCase;
 
-use Froxlor\Settings;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Mysqls;
 use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\Settings\Store;
+use PHPUnit\Framework\TestCase;
 
 /**
  *
@@ -54,7 +54,8 @@ class MysqlsTest extends TestCase
 		}
 	}
 
-	public function testCustomerMysqlsDBNameAdd() {
+	public function testCustomerMysqlsDBNameAdd()
+	{
 		global $admin_userdata;
 
 		// get customer
@@ -349,7 +350,7 @@ class MysqlsTest extends TestCase
 		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		foreach ($results as $user) {
 			$passwd = $user['Password'] ?? $user['authentication_string'];
-			$this->assertEquals($testdata['password'], $passwd);
+			$this->assertEquals($testdata['password'], $passwd, "Wrong authentication_string for user '" . $user['User'] . "'@'" . $user['Host'] . "'");
 		}
 	}
 }
