@@ -351,8 +351,14 @@ class MysqlsTest extends TestCase
 		]);
 		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		foreach ($results as $user) {
-			$passwd = $user['Password'] ?? $user['authentication_string'];
-			$this->assertEquals($testdata['hosts'][$user['Host']]['password'], $passwd, "Wrong authentication_string for user '" . $user['User'] . "'@'" . $user['Host'] . "'");
+			if ($user['Host'] == '10.0.0.10') {
+				// user 'froxlor010'@'10.0.0.10' has been added after we ran
+				// $dbm->getManager()->getAllSqlUsers(false) so it cannot be part of the array
+				$this->assertEmpty($testdata['hosts'][$user['Host']]);
+			} else {
+				$passwd = $user['Password'] ?? $user['authentication_string'];
+				$this->assertEquals($testdata['hosts'][$user['Host']]['password'], $passwd, "Wrong authentication_string for user '" . $user['User'] . "'@'" . $user['Host'] . "'");
+			}
 		}
 	}
 }
