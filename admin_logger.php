@@ -34,7 +34,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
-if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
+if ($page == 'log') {
 	if ($action == '') {
 		try {
 			$syslog_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.syslog.php';
@@ -46,16 +46,16 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $syslog_list_data, 'syslog_list'),
-			'actions_links' => [
+			'actions_links' => ($userinfo['change_serversettings'] == '1' ? [
 				[
 					'href' => $linker->getLink(['section' => 'logger', 'page' => 'log', 'action' => 'truncate']),
 					'label' => lng('logger.truncate'),
 					'icon' => 'fa-solid fa-recycle',
 					'class' => 'btn-warning'
 				]
-			]
+			] : [])
 		]);
-	} elseif ($action == 'truncate') {
+	} elseif ($action == 'truncate' && $userinfo['change_serversettings'] == '1') {
 		if (Request::post('send') == 'send') {
 			try {
 				SysLog::getLocal($userinfo, [

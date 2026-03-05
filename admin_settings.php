@@ -404,7 +404,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	UI::view('user/form-note.html.twig', [
 		'formaction' => $linker->getLink(['section' => 'settings']),
 		'formdata' => $mailtest_add_data['mailtest'],
-		'actions_links' => [
+		'actions_links' => ($userinfo['change_serversettings'] == '1' ? [
 			[
 				'href' => $linker->getLink([
 					'section' => 'settings',
@@ -416,7 +416,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				'icon' => 'fa-solid fa-gears',
 				'class' => 'btn-outline-secondary'
 			]
-		],
+		] : []),
 		// alert-box
 		'type' => $note_type,
 		'alert_msg' => $note_msg

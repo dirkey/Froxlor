@@ -130,7 +130,7 @@ if ($page == 'message') {
 	UI::view('user/form-note.html.twig', [
 		'formaction' => $linker->getLink(['section' => 'message', 'action' => '']),
 		'formdata' => $messages_add_data['messages_add'],
-		'actions_links' => [
+		'actions_links' => ($userinfo['change_serversettings'] == '1' ? [
 			[
 				'href' => $linker->getLink([
 					'section' => 'settings',
@@ -142,7 +142,7 @@ if ($page == 'message') {
 				'icon' => 'fa-solid fa-gears',
 				'class' => 'btn-outline-secondary'
 			]
-		],
+		] : []),
 		// alert-box
 		'type' => $note_type,
 		'alert_msg' => $note_msg
