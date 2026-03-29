@@ -97,7 +97,7 @@ class EmailSender extends ApiCommand implements ResourceEntity
 			if (!Validate::validateEmail($idna_convert->encode($allowed_sender))) {
 				Response::standardError('emailiswrong', $allowed_sender, true);
 			}
-			self::validateLocalDomainOwnership(explode("@", $allowed_sender)[0] ?? "");
+			self::validateLocalDomainOwnership(explode("@", $allowed_sender)[1] ?? "");
 		} else {
 			if (!Validate::validateDomain($idna_convert->encode(substr($allowed_sender, 1)))) {
 				Response::standardError('wildcardemailiswrong', substr($allowed_sender, 1), true);
