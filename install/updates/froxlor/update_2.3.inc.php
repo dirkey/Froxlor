@@ -207,3 +207,8 @@ if (Froxlor::isDatabaseVersion('202512280')) {
 
 	Froxlor::updateToDbVersion('202603100');
 }
+
+if (Froxlor::isFroxlorVersion('2.3.5')) {
+	Update::showUpdateStep("Updating from 2.3.5 to 2.3.6", false);
+	Froxlor::updateToVersion('2.3.6');
+}
