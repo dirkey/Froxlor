@@ -776,16 +776,24 @@ if ($page == 'email_domain') {
 					'id' => $id
 				]);
 			} else {
-				$sel_stmt = Database::prepare("SELECT `allowed_sender` FROM `" . TABLE_MAIL_SENDER_ALIAS . "` WHERE `id` = :sid");
-				$sender_data = Database::pexecute_first($sel_stmt, ['sid' => $senderid]);
+				$sel_stmt = Database::prepare("
+					SELECT s.`allowed_sender`
+					FROM `" . TABLE_MAIL_SENDER_ALIAS . "` s
+					LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON u.username = s.email
+					WHERE u.id = :popaccountid AND u.customerid = :cid AND s.id = :senderid
+				");
+				$sender_data = Database::pexecute_first($sel_stmt, ['popaccountid' => $result['popaccountid'], 'cid' => $userinfo['customerid'], 'senderid' => (int)$senderid]);
 
-				HTML::askYesNo('email_reallydelete_sender', $filename, [
-					'id' => $id,
-					'senderid' => $senderid,
-					'page' => $page,
-					'domainid' => $email_domainid,
-					'action' => $action
-				], $idna_convert->decode($result['email_full']) . ' -> ' . $sender_data['allowed_sender']);
+				if ($sender_data) {
+					HTML::askYesNo('email_reallydelete_sender', $filename, [
+						'id' => $id,
+						'senderid' => $senderid,
+						'page' => $page,
+						'domainid' => $email_domainid,
+						'action' => $action
+					], $idna_convert->decode($result['email_full']) . ' -> ' . $sender_data['allowed_sender']);
+				}
+				Response::dynamicError('No such entity');
 			}
 		}
 	}
